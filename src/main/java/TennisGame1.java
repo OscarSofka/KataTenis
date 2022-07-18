@@ -11,60 +11,14 @@ public class TennisGame1 implements TennisGame {
     }
 
     public void wonPoint(String playerName) {
-        if (playerName.equals(this.player1Name))
+        if (playerName.equals(this.player1Name)){
             scorePlayer1 += 1;
-        else
+        }
+        if (playerName.equals(this.player2Name)){
             scorePlayer2 += 1;
-    }
-
-    public String getScore() {
-        String score;
-        if (isScoreEqual())
-            score = equalScoreString();
-        else if (isScoreGreaterThan4())
-            score = scoreGreaterThan4();
-        else
-            score = differentScore(scorePlayer1).concat("-").concat(differentScore(scorePlayer2));
-
-        return score;
-    }
-
-    private boolean isScoreGreaterThan4() {
-        return scorePlayer1 >=4 || scorePlayer2 >=4;
-    }
-
-    private boolean isScoreEqual() {
-        return scorePlayer1 == scorePlayer2;
-    }
-
-    private String differentScore(int scorePlayer) {
-        switch(scorePlayer)
-        {
-            case 0: return "Love";
-            case 1: return "Fifteen";
-            case 2: return "Thirty";
-            default: return "Forty";
         }
     }
-
-
-    private String scoreGreaterThan4() {
-        int minusResult = scorePlayer1 - scorePlayer2;
-        switch(minusResult){
-            case 1: case -1: return advantageScore(minusResult);
-            default: return winScore(minusResult);
-        }
-    }
-
-    private String advantageScore(int minusResult){
-        return minusResult ==1 ? "Advantage ".concat(player1Name) : "Advantage ".concat(player2Name);
-    }
-
-    private String winScore(int minusResult){
-        return minusResult >= 2 ? "Win for ".concat(player1Name): "Win for ".concat(player2Name);
-    }
-
-    private String equalScoreString() {
+    private String equalsScorePlayers(){
         switch (scorePlayer1)
         {
             case 0: return "Love-All";
@@ -72,5 +26,50 @@ public class TennisGame1 implements TennisGame {
             case 2: return "Thirty-All";
             default: return "Deuce";
         }
+    }
+    private String advantageScore(int minusResult){
+        return minusResult ==1 ? "Advantage player1" : "Advantage player2";
+    }
+    private String winScore(int minusResult){
+        return minusResult >= 2 ? "Win for player1": "Win for player2";
+    }
+    private String scoreGreaterThan4(){
+        int minusResult = scorePlayer1 - scorePlayer2;
+        switch(minusResult){
+            case 1: case -1: return advantageScore(minusResult);
+            default: return winScore(minusResult);
+        }
+    }
+    private Boolean isLastScorePlayer(Integer scorePlayer){
+        return scorePlayer == 1;
+    }
+    private String assignScoreByPlayer(Integer scoreByPlayer){
+        String score = "";
+        switch(scoreByPlayer)
+        {
+            case 0: return score+="Love";
+            case 1: return score+="Fifteen";
+            case 2: return score+="Thirty";
+            default: return score+="Forty";
+        }
+    }
+    private String getScoreWhenIsZeroToThree(){
+        String score = "";
+        Integer scorePlayers[] = {scorePlayer1,scorePlayer2};
+        for (int scorePlayer = 0;scorePlayer <scorePlayers.length;scorePlayer++){ if(isLastScorePlayer(scorePlayer)) score += "-";
+            score += assignScoreByPlayer(scorePlayers[scorePlayer]);
+        }
+        return score;
+    }
+    public String getScore() {
+        String score = "";
+        int tempScore=0;
+        if (scorePlayer1==scorePlayer2)
+            score = equalsScorePlayers();
+        else if (scorePlayer1>=4 || scorePlayer2>=4)
+            score = scoreGreaterThan4();
+        else
+            score = getScoreWhenIsZeroToThree();
+        return score;
     }
 }
